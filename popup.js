@@ -7,27 +7,29 @@ function load_recipe(recipe_url) {
   var request = new XMLHttpRequest();
   
 
-  document.getElementById("recipe_url").innerHTML = "C:" + recipe_url;
-  document.getElementById("recipe_url").innerHTML = "L:" + recipe_url;
-  
-  document.getElementById("recipe_url").innerHTML = "H:" + recipe_url;
   request.onreadystatechange = function (e) {
     if (request.readyState == 4) {
       if (request.status == 200) {
         document.getElementById("recipe_data").innerHTML = request.responseText;
-        var json = JSON.parse(request.responseText);
-        map.addEventListener('click', function () {
+
+        /*map.addEventListener('click', function () {
           window.close();
+        });*/
+        $("#serving_size").change(function(e){
+          document.getElementById("recipe_url").innerHTML = document.getElementById("serving_size").value;
+          document.getElementById("calories_per_serving").innerHTML = parseFloat(document.getElementById("calories_in_recipe").textContent) / document.getElementById("serving_size").value;
+          document.getElementById("protein_per_serving").innerHTML = parseFloat(document.getElementById("protein_in_recipe").textContent) / document.getElementById("serving_size").value;
+          document.getElementById("carbs_per_serving").innerHTML = parseFloat(document.getElementById("carbs_in_recipe").textContent) / document.getElementById("serving_size").value;
+          document.getElementById("fat_per_serving").innerHTML = parseFloat(document.getElementById("fat_in_recipe").textContent) / document.getElementById("serving_size").value;
         });
+
       } else {
         console.log('Unable to resolve address into lat/lng');
       }
     }
   };
   var params = '["' + recipe_url + '"]';
-  document.getElementById("recipe_url").innerHTML = "AS";
   request.open("POST", url, true);
-  document.getElementById("recipe_url").innerHTML = "POS";
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   request.setRequestHeader("Content-length", params.length);
   request.setRequestHeader("Connection", "close");
@@ -35,8 +37,6 @@ function load_recipe(recipe_url) {
 }
 
 function map() {
-  document.getElementById("con").innerHTML = "New text!";
-
   var recipe_url = chrome.extension.getBackgroundPage().selectedRecipe;
   if (recipe_url)
     load_recipe(recipe_url);
