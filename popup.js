@@ -18,12 +18,14 @@ function load_recipe(recipe_url) {
         });*/
         $("#serving_size").change(function(e){
           document.getElementById("debug").innerHTML = document.getElementById("serving_size").value;
-          document.getElementById("calories_per_serving").innerHTML = parseFloat(document.getElementById("calories_in_recipe").textContent) / parseInt(document.getElementById("serving_size").value);
-          document.getElementById("protein_per_serving").innerHTML = parseFloat(document.getElementById("protein_in_recipe").textContent) / parseInt(document.getElementById("serving_size").value);
-          document.getElementById("carbs_per_serving").innerHTML = parseFloat(document.getElementById("carbs_in_recipe").textContent) / parseInt(document.getElementById("serving_size").value);
-          document.getElementById("fat_per_serving").innerHTML = parseFloat(document.getElementById("fat_in_recipe").textContent) / parseInt(document.getElementById("serving_size").value);
+          document.getElementById("calories_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("calories_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+          document.getElementById("protein_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("protein_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+          document.getElementById("carbs_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("carbs_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+          document.getElementById("fat_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("fat_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+          //formatNumbers();
         });
         document.getElementById("debug").innerHTML = "3";
+        formatNumbers();
 
       } else if (request.status == 500) {
         document.getElementById("recipe_data").innerHTML = request.responseText;
@@ -40,12 +42,19 @@ function load_recipe(recipe_url) {
   request.send(params);
 }
 
+function formatNumbers(){
+    $( "*" ).each(function(index){ 
+    if($(this).attr('nut') !== undefined ){ 
+      $(this).text(parseFloat($(this).text()).toFixed($(this).attr('nut')) );
+    }
+  } );
+
+}
 function map() {
   var recipe_url = chrome.extension.getBackgroundPage().selectedRecipe;
   if (recipe_url)
     load_recipe(recipe_url);
-
-
+  
 }
 
 window.onload = map;
