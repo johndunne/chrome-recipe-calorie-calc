@@ -13,8 +13,15 @@ if (window == top) {
 // Return null if none is found.
 var findRecipe = function() {
   var x = document.URL;
+  var supported_sites = ["101cookbooks.com","12tomatoes.com","/^\w+\.about\.com$/","/^(m\.)?allrecipes.com$/","americastestkitchen.com","bbcgoodfood.com","bbc.co.uk","bhg.com","bigoven.com","bonappetit.com","bravotv.com","chow.com","cooking.com","cookingchanneltv.com","cooks.com","eatingwell.com","elanaspantry.com","epicurious.com","food.com","food52.com","foodandwine.com","foodnetwork.com","foodnetwork.co.uk","kingarthurflour.com","marthastewart.com","myrecipes.com","nytimes.com","pillsbury.com","realsimple.com","recipe.com","saveur.com","seriouseats.com","simplyrecipes.com","skinnytaste.com","recipes.sparkpeople.com","tasteofhome.com","thedailymeal.com","thekitchn.com"];
 
-  if( x.indexOf("recipe.com") > 0 ){
+  var done = false;
+  supported_sites.forEach(function (site){
+    if( x.indexOf(site) > 0 ){
+      done = true;
+    }
+  });
+  if( done ){
     console.log("Found! : " + x );
     return x;
   }
