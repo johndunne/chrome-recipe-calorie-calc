@@ -44,9 +44,12 @@ function load_recipe(recipe_url) {
 
 function formatNumbers(){
     $( "*" ).each(function(index){ 
-    if($(this).attr('nut') !== undefined ){ 
-      $(this).text(parseFloat($(this).text()).toFixed($(this).attr('nut')) );
-    }
+      if($(this).attr('nut') !== undefined ){ 
+        $(this).text(parseFloat($(this).text()).toFixed($(this).attr('nut')) );
+      }
+      if($(this).attr('changeable') !== undefined ){ 
+        $(this).click(function(e){$(this).text("Change!");});
+      }
   } );
 
 }
