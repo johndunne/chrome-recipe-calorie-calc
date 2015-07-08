@@ -53,6 +53,6 @@ var findRecipe = function() {
       console.log("no match in: " + text);
     }
   }*/
-  return x;
+  return null;
 }
 
