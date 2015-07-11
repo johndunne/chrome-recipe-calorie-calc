@@ -9,8 +9,9 @@
   ],
   "permissions": [
     "tabs",
-    "http://recipecalcal.com/*",
-    "http://api.recipecalcal.com/*"
+    "http://recipecalcalc.com/*",
+    "http://api.recipecalcalc.com/*",
+    "http://localhost:1243/*"
   ],
   "page_action": {
       "default_name": "Display Map",

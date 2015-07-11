@@ -1,8 +1,9 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
+var current_recipe_url;
 function load_recipe(recipe_url) {
+  current_recipe_url = recipe_url;
   var url = 'http://localhost:1243/plugin/parse_recipe';
   var request = new XMLHttpRequest();
   
@@ -24,7 +25,6 @@ function load_recipe(recipe_url) {
           document.getElementById("fat_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("fat_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
           //formatNumbers();
         });
-        document.getElementById("debug").innerHTML = "3";
         formatNumbers();
 
       } else if (request.status == 500) {
@@ -57,7 +57,56 @@ function map() {
   var recipe_url = chrome.extension.getBackgroundPage().selectedRecipe;
   if (recipe_url)
     load_recipe(recipe_url);
-  
+  document.getElementById("debug").innerHTML = "D";
+  $("#recommend_image").click(function(e){
+    favRecipe();
+  });
+  $("#star_image_1").click(function(e){
+    rateRecipe(1);
+  });
+  $("#star_image_2").click(function(e){
+    rateRecipe(2);
+  });
+  $("#star_image_3").click(function(e){
+    rateRecipe(3);
+  });
+  $("#star_image_4").click(function(e){
+    rateRecipe(4);
+  });
+  $("#star_image_5").click(function(e){
+    rateRecipe(5);
+  });
+}     
+function rateRecipe( rating ){
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      document.getElementById("debug").innerHTML = "S=" + request.status;
+        if (request.readyState == 4 && (request.status == 200||request.status == 201)) {
+          document.getElementById("debug").innerHTML = "Done";
+        }
+    }
+    var url = "http://localhost:1243/rate_recipe";
+    var params = '{"recipe_url" : "' + current_recipe_url + '", "rating" : ' + rating + '}';
+    request.open("POST", url, true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.setRequestHeader("Content-length", params.length);
+    request.setRequestHeader("Connection", "close");
+    request.send(params);
 }
-
+function favRecipe( ){
+    var request = new XMLHttpRequest();
+    request.onreadystatechange = function() {
+      document.getElementById("debug").innerHTML = "S=" + request.status;
+        if (request.readyState == 4 && (request.status == 200||request.status == 201)) {
+          document.getElementById("debug").innerHTML = "Done";
+        }
+    }
+    var url = "http://localhost:1243/fav_recipe";
+    var params = '{"recipe_url" : "' + current_recipe_url + '"}';
+    request.open("POST", url, true);
+    request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    request.setRequestHeader("Content-length", params.length);
+    request.setRequestHeader("Connection", "close");
+    request.send(params);
+}
 window.onload = map;
