@@ -37,9 +37,6 @@ function getRandomToken() {
     return hex;
 }
 
-
-
-
 // Search the text nodes for a US-style mailing address.
 // Return null if none is found.
 var findRecipe = function() {
@@ -52,8 +49,9 @@ var findRecipe = function() {
       done = true;
     }
   });
+
   if( done ){
-    console.log("Found! : " + x );
+    console.log("Supported site : " + x );
     return x;
   }
   /*var found;

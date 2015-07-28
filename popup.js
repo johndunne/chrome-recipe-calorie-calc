@@ -5,14 +5,17 @@ var current_recipe_url;
 var unqiue_user_id;
 
 function load_recipe(recipe_url) {
+  console.log("Loading url: " + recipe_url);
   current_recipe_url = recipe_url;
-  var url = 'http://localhost:1243/plugin/parse_recipe';
+  var url = 'https://recipecalcalc.com/api/plugin/parse_recipe';
   var request = new XMLHttpRequest();
   
 
   request.onreadystatechange = function (e) {
+    console.log("Request response in");
     if (request.readyState == 4) {
       if (request.status == 200) {
+        console.log("Request response is ok");
         document.getElementById("recipe_data").innerHTML = request.responseText;
         /*map.addEventListener('click', function () {
           window.close();
@@ -40,6 +43,7 @@ function load_recipe(recipe_url) {
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   request.setRequestHeader("Content-length", params.length);
   request.setRequestHeader("Connection", "close");
+  cpnsole.log("Sending request to API");
   request.send(params);
 }
 
