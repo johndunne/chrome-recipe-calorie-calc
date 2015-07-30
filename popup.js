@@ -3,11 +3,13 @@
 // found in the LICENSE file.
 var current_recipe_url;
 var unqiue_user_id;
+//var recipe_api_url = "http://localhost:1243";
+var recipe_api_url = "https://recipecalcalc.com/api";
 
 function load_recipe(recipe_url) {
   console.log("Loading url: " + recipe_url);
   current_recipe_url = recipe_url;
-  var url = 'https://recipecalcalc.com/api/plugin/parse_recipe';
+  var url = recipe_api_url + '/plugin/parse_recipe';
   var request = new XMLHttpRequest();
   
 
@@ -43,7 +45,7 @@ function load_recipe(recipe_url) {
   request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   request.setRequestHeader("Content-length", params.length);
   request.setRequestHeader("Connection", "close");
-  cpnsole.log("Sending request to API");
+  console.log("Sending request to API");
   request.send(params);
 }
 
@@ -60,6 +62,7 @@ function formatNumbers(){
 }
 function map() {
   var recipe_url = chrome.extension.getBackgroundPage().selectedRecipe;
+  console.log(chrome.extension.getBackgroundPage());
   console.log("Want: " + recipe_url);
   if (recipe_url)
     load_recipe(recipe_url);
@@ -93,7 +96,7 @@ function rateRecipe( rating ){
     }
     console.log("Unique ID[" + unqiue_user_id + "]");
 
-    var url = "http://localhost:1243/rate_recipe";
+    var url = recipe_api_url + "/rate_recipe";
     var params = '{"recipe_url" : "' + current_recipe_url + '", "rating" : ' + rating + '}';
     request.setRequestHeader("UserID", chrome.extension.getBackgroundPage().uniqueUserID);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -104,7 +107,7 @@ function rateRecipe( rating ){
 }
 
 function getRecipeRating( the_recipe_url ){
-    var url = "http://localhost:1243/get_recipe_rating";
+    var url = recipe_api_url + "/get_recipe_rating";
     console.log("Fetching: " + url);
     chrome.extension.getBackgroundPage().console.log(url);
     $("#debug").html(" URL + " + url);
@@ -145,7 +148,7 @@ function favRecipe( ){
           document.getElementById("debug").innerHTML = "Done";
         }
     }
-    var url = "http://localhost:1243/fav_recipe";
+    var url = recipe_api_url + "/fav_recipe";
     var params = '{"recipe_url" : "' + current_recipe_url + '"}';
     request.open("POST", url, true);
     request.setRequestHeader("UserID", chrome.extension.getBackgroundPage().uniqueUserID);

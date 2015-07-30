@@ -19,7 +19,7 @@ if (window == top) {
         });
     }
     function useToken(userid) {
-        console.log( "userid = " + userid);
+        console.log( "user id = " + userid);
     }
   });
 

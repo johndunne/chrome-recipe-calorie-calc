@@ -9,7 +9,10 @@ var selectedId = null;
 var uniqueUserID = null;
 
 function updateRecipe(tabId) {
+  console.log("updateRecipe:" + tabId);
+  console.log(addresses[tabId]);
   chrome.tabs.sendRequest(tabId, {}, function(recipe_url) {
+  console.log("updateRecipe->: recipe_url:" + recipe_url);
     addresses[tabId] = recipe_url;
     if (!recipe_url) {
       chrome.pageAction.hide(tabId);
@@ -23,6 +26,8 @@ function updateRecipe(tabId) {
 }
 
 function updateSelected(tabId) {
+  console.log("updateSelected:" + tabId);
+  console.log(addresses[tabId]);
   selectedRecipe = addresses[tabId];
   if (selectedRecipe){
     chrome.storage.sync.get('userid', function(items) {
@@ -37,7 +42,7 @@ function updateSelected(tabId) {
       }
       function useToken(userid) {
         uniqueUserID = userid;
-        console.log( "userid = " + userid);
+        console.log( "user id = " + userid);
       }
     });
 
