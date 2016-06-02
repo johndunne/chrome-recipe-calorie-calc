@@ -12,14 +12,16 @@ function updateRecipe(tabId) {
   console.log("updateRecipe:" + tabId);
   console.log(addresses[tabId]);
   chrome.tabs.sendRequest(tabId, {}, function(recipe_url) {
-  console.log("updateRecipe->: recipe_url:" + recipe_url);
-    addresses[tabId] = recipe_url;
-    if (!recipe_url) {
-      chrome.pageAction.hide(tabId);
-    } else {
-      chrome.pageAction.show(tabId);
-      if (selectedId == tabId) {
-        updateSelected(tabId);
+    if(recipe_url){
+      console.log("updateRecipe->: recipe_url:" + recipe_url);
+      addresses[tabId] = recipe_url;
+      if (!recipe_url) {
+        chrome.pageAction.hide(tabId);
+      } else {
+        chrome.pageAction.show(tabId);
+        if (selectedId == tabId) {
+          updateSelected(tabId);
+        }
       }
     }
   });
@@ -42,7 +44,7 @@ function updateSelected(tabId) {
       }
       function useToken(userid) {
         uniqueUserID = userid;
-        console.log( "user id = " + userid);
+        console.log( "user  bg id = " + userid);
       }
     });
 

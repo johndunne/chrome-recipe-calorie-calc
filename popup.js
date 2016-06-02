@@ -3,9 +3,36 @@
 // found in the LICENSE file.
 var current_recipe_url;
 var unqiue_user_id;
-//var recipe_api_url = "http://localhost:1243";
-var recipe_api_url = "https://recipecalcalc.com/api";
+var recipe_api_url = "http://localhost:1243";
+//var recipe_api_url = "https://recipecalcalc.com/api";
 
+function load_tally_recipe(recipe_url){
+    var options = {};
+    options.nutritionLabel = {};
+    if( $("#recipe_name").val().length > 0  ){
+        options.recipeName =$("#recipe_name").val();
+    }
+    if( $("#recipe_portions").val().length > 0  ){
+        options.portions =$("#recipe_portions").val();
+    }
+    parseIngredients(postData, options , function(recipe, error){
+        if( error ){
+            $("#error-message-container").show();
+            $("#error-message").text(error);
+            console.error(error);
+        }else {
+            $("#error-message-container").hide();
+            // Add the nutrtition label to the nutritional label javascript object
+            $('#test4').nutritionLabel( recipe.nutritionLabel );
+            getTextTemplate("recipe-template", function (source) {
+                var template = Handlebars.compile(source);
+                var info = template(recipe);
+                $('#recipe-content').html(info);
+            });
+        }
+    });
+
+}
 function load_recipe(recipe_url) {
   console.log("Loading url: " + recipe_url);
   current_recipe_url = recipe_url;
@@ -27,6 +54,8 @@ function load_recipe(recipe_url) {
           document.getElementById("protein_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("protein_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
           document.getElementById("carbs_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("carbs_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
           document.getElementById("fat_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("fat_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+//          document.getElementById("fat_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("fat_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
+          document.getElementById("sugar_per_serving").innerHTML = parseFloat(parseFloat(document.getElementById("sugar_in_recipe").textContent) / parseFloat(document.getElementById("serving_size").value)).toFixed(0);
           //formatNumbers();
         });
         formatNumbers();
@@ -64,6 +93,7 @@ function map() {
   var recipe_url = chrome.extension.getBackgroundPage().selectedRecipe;
   console.log(chrome.extension.getBackgroundPage());
   console.log("Want: " + recipe_url);
+  console.log(chrome.extension.getBackgroundPage().addresses);
   if (recipe_url)
     load_recipe(recipe_url);
   console.log("Loaded: " + recipe_url);
@@ -88,21 +118,22 @@ function map() {
   });
 }     
 function rateRecipe( rating ){
+  console.log("Setting rating: " + rating);
     var request = new XMLHttpRequest();
     request.onreadystatechange = function() {
         if (request.readyState == 4 && (request.status == 200||request.status == 201)) {
-
+          console.log("ratRecipe: " + request.responseText);
         }
     }
-    console.log("Unique ID[" + unqiue_user_id + "]");
+    console.log("Unique ID[" + chrome.extension.getBackgroundPage().uniqueUserID + "]");
 
-    var url = recipe_api_url + "/rate_recipe";
+    var url = recipe_api_url + "/rate-recipe";
     var params = '{"recipe_url" : "' + current_recipe_url + '", "rating" : ' + rating + '}';
+    request.open("POST", url, true);
     request.setRequestHeader("UserID", chrome.extension.getBackgroundPage().uniqueUserID);
     request.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     request.setRequestHeader("Content-length", params.length);
     request.setRequestHeader("Connection", "close");
-    request.open("POST", url, true);
     request.send(params);
 }
 
@@ -116,8 +147,9 @@ function getRecipeRating( the_recipe_url ){
     request.onreadystatechange = function() {
     document.getElementById("debug").innerHTML = request.readyState +  "Some" + request.status ;
         if (request.readyState == 4 && (request.status == 200||request.status == 201)) {
+          console.log("Received rating: " + request.responseText);
           var result = JSON.parse(request.responseText);
-            document.getElementById("debug").innerHTML = result.average;
+          document.getElementById("debug").innerHTML = result.average;
           for (i=5; i > 0; i--) {
             $("#star_image_"+i).attr('src','star_off.png');
           };
@@ -148,7 +180,7 @@ function favRecipe( ){
           document.getElementById("debug").innerHTML = "Done";
         }
     }
-    var url = recipe_api_url + "/fav_recipe";
+    var url = recipe_api_url + "/fav-recipe";
     var params = '{"recipe_url" : "' + current_recipe_url + '"}';
     request.open("POST", url, true);
     request.setRequestHeader("UserID", chrome.extension.getBackgroundPage().uniqueUserID);

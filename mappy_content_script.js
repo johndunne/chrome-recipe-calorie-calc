@@ -1,11 +1,14 @@
 // Copyright (c) 2011 The Chromium Authors. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
+var globalID = null;
 
 // The background page is asking us to find an address on the page.
 if (window == top) {
   chrome.extension.onRequest.addListener(function(req, sender, sendResponse) {
     sendResponse(findRecipe());
+console.log(sender);
+console.log(sendResponse);
   });
 
   chrome.storage.sync.get('userid', function(items) {
@@ -19,10 +22,12 @@ if (window == top) {
         });
     }
     function useToken(userid) {
-        console.log( "user id = " + userid);
+        console.log( "user mappy id = " + userid);
+
+        globalID = userid;
+
     }
   });
-
 }
 
 function getRandomToken() {

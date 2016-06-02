@@ -24,8 +24,45 @@
     </div>
   </div>
 </nav>
-    <div id="recipe_data">Data</div>
+    <div id="recipe_data">Fetching data from RecipeCalCalc.com ...</div>
     <script src="popup.js"></script>
-     <div id="debug">Debug</div>
+     <div id="debug">Fetching data from server</div>
+
+<script id="recipe-template" type="text/template">
+    {{description}}
+    <table class="table table-striped table-bordered table-condensed">
+        <tr><th>Ingredient</th><th>Calories</th><th>Amount</th><th>Fat</th><th>Sugar</th><th>Protein</th></tr>
+        {{#ingMap}}
+          {{#if header}}
+          <tr><td colspan="6"><strong>{{ingredient_line}}</strong></td></tr>
+          {{else}}
+        <tr><td><span id="name_{{seq}}" seq="{{seq}}" changeable_food data-toggle="tooltip" title="{{debug_output}}" grams="{{amount}}" food_id="{{food_id}}">{{ingredient_line}}</span></td>
+            <td><span id="calories_for_{{seq}}">{{calories}}</span></td>
+            <td><span id="amount_for_{{seq}}">{{amount}}{{unit}}</span></td>
+            <td><span id="total_fat_for_{{seq}}">{{total_fat}}g</span></td>
+            <td><span id="total_sugar_for_{{seq}}">{{total_sugar}}g</span></td>
+            <td><span id="protein_for_{{seq}}">{{protein}}g</span></td>
+          </tr>
+          {{/if}}
+        {{/ingMap}}
+        {{#if perPortion}}
+            <tr><td class="text-right">Per portion</td>
+                <td><span id="calories_per_portion">{{perPortion.calories}}</span></td>
+                <td><span id="amount_per_portion">{{perPortion.amount}}g</span></td>
+                <td><span id="total_fat_per_portion">{{perPortion.total_fat}}g</span></td>
+                <td><span id="total_sugar_per_portion">{{perPortion.total_sugar}}g</span></td>
+                <td><span id="protein_per_portion">{{perPortion.protein}}g</span></td>
+            </tr>
+        {{/if}}
+        <tr><td class="text-right">Total</td>
+            <td><span id="calories_total">{{total_nutrition.calories}}</span></td>
+            <td><span id="amount_total">{{total_nutrition.amount}}g</span></td>
+            <td><span id="total_fat_total">{{total_nutrition.total_fat}}g</span></td>
+            <td><span id="total_sugar_total">{{total_nutrition.total_sugar}}g</span></td>
+            <td><span id="protein_total">{{total_nutrition.protein}}g</span></td>
+        </tr>
+    </table>
+</script>
+
   </body>
 </html>
